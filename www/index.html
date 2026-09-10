@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remote Admin â€” Control Panel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• SIDEBAR â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+      </svg>
+      <span>RemoteCtrl</span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-tab="screen" id="btn-screen">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <span>Ekran</span>
+      </button>
+      <button class="nav-btn" data-tab="camera" id="btn-camera">
+        <svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <span>Kamera</span>
+      </button>
+      <button class="nav-btn" data-tab="mic" id="btn-mic">
+        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+        <span>Mikrofon</span>
+      </button>
+      <button class="nav-btn" data-tab="terminal" id="btn-terminal">
+        <svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <span>Terminal</span>
+      </button>
+      <button class="nav-btn" data-tab="files" id="btn-files">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span>Dosyalar</span>
+      </button>
+      <button class="nav-btn" data-tab="process" id="btn-process">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="9" height="9"/><rect x="13" y="2" width="9" height="9"/><rect x="13" y="13" width="9" height="9"/><rect x="2" y="13" width="9" height="9"/></svg>
+        <span>SÃ¼reÃ§ler</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">BaÄŸlanÄ±yor...</span>
+    </div>
+  </aside>
+
+  <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• MAIN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger">â˜°</button>
+        <h1 class="page-title" id="pageTitle">Ekran</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="agent-badge offline" id="agentBadge">ğŸ”´ Exe Bekleniyor</div>
+        <div class="ping-badge" id="pingBadge">â€” ms</div>
+        <div class="quality-wrap">
+          <label>Kalite</label>
+          <input type="range" id="qualitySlider" min="10" max="95" value="70" />
+          <span id="qualityVal">70</span>
+        </div>
+        <button class="btn-danger" id="btnDisconnect">BaÄŸlantÄ±yÄ± Kes</button>
+      </div>
+    </header>
+
+    <!-- â•â•â•â• SCREEN TAB â•â•â•â• -->
+    <section class="tab active" id="tab-screen">
+      <div class="screen-wrap" id="screenWrap">
+        <canvas id="screenCanvas"></canvas>
+        <div class="screen-placeholder" id="screenPlaceholder">
+          <div class="pulse-ring"></div>
+          <p>Ekran akÄ±ÅŸÄ± baÅŸlatÄ±lÄ±yor...</p>
+        </div>
+      </div>
+      <div class="screen-controls">
+        <button class="btn-primary" id="btnScreenStart">â–¶ BaÅŸlat</button>
+        <button class="btn-secondary" id="btnScreenStop">â–  Durdur</button>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="chkInput" />
+          <span class="toggle"></span>
+          Mouse &amp; Klavye KontrolÃ¼
+        </label>
+        <span class="fps-info" id="fpsInfo">0 fps</span>
+      </div>
+    </section>
+
+    <!-- â•â•â•â• CAMERA TAB â•â•â•â• -->
+    <section class="tab" id="tab-camera">
+      <div class="camera-wrap">
+        <canvas id="cameraCanvas"></canvas>
+        <div class="camera-placeholder" id="cameraPlaceholder">
+          <div class="camera-icon">ğŸ“·</div>
+          <p>Kamera kapalÄ±</p>
+        </div>
+      </div>
+      <div class="camera-controls">
+        <button class="btn-primary" id="btnCameraStart">â–¶ KamerayÄ± AÃ§</button>
+        <button class="btn-secondary" id="btnCameraStop">â–  Kapat</button>
+      </div>
+    </section>
+
+    <!-- â•â•â•â• MIC TAB â•â•â•â• -->
+    <section class="tab" id="tab-mic">
+      <div class="mic-wrap">
+        <div class="mic-status" id="micStatus">
+          <div class="mic-icon">ğŸ¤</div>
+          <p id="micLabel">Mikrofon kapalÄ±</p>
+        </div>
+        <canvas id="micCanvas" width="800" height="200"></canvas>
+        <div class="mic-level-bar">
+          <div class="mic-level-fill" id="micLevelFill"></div>
+        </div>
+      </div>
+      <div class="mic-controls">
+        <button class="btn-primary" id="btnMicStart">â–¶ Mikrofonu AÃ§</button>
+        <button class="btn-secondary" id="btnMicStop">â–  Kapat</button>
+        <label>Ses Ã‡Ä±kÄ±ÅŸÄ± (Lokal)
+          <input type="checkbox" id="chkMicPlayback" />
+        </label>
+      </div>
+    </section>
+
+    <!-- â•â•â•â• TERMINAL TAB â•â•â•â• -->
+    <section class="tab" id="tab-terminal">
+      <div class="terminal-wrap" id="terminalOutput"></div>
+      <div class="terminal-input-row">
+        <span class="prompt">C:\&gt;</span>
+        <input type="text" id="terminalInput" placeholder="komut yaz, Enter'a bas..." autocomplete="off" spellcheck="false" />
+        <button class="btn-primary" id="btnShellStart">BaÅŸlat</button>
+        <button class="btn-secondary" id="btnShellStop">Durdur</button>
+      </div>
+    </section>
+
+    <!-- â•â•â•â• FILES TAB â•â•â•â• -->
+    <section class="tab" id="tab-files">
+      <div class="files-toolbar">
+        <button class="btn-sm" id="btnNavUp">â¬† Ãœst KlasÃ¶r</button>
+        <div class="path-bar" id="pathBar">C:\</div>
+        <button class="btn-sm" id="btnRefresh">â†» Yenile</button>
+        <button class="btn-sm" id="btnNewFolder">ğŸ“ Yeni KlasÃ¶r</button>
+        <button class="btn-sm" id="btnUploadFile">â¬† YÃ¼kle</button>
+        <input type="file" id="fileUploadInput" style="display:none" />
+      </div>
+      <div class="file-list-header">
+        <span class="col-name">Ad</span>
+        <span class="col-size">Boyut</span>
+        <span class="col-date">Tarih</span>
+        <span class="col-actions">Ä°ÅŸlem</span>
+      </div>
+      <div class="file-list" id="fileList"></div>
+      <div class="download-progress" id="dlProgress" style="display:none">
+        <div class="dl-bar" id="dlBar"></div>
+        <span id="dlLabel">Ä°ndiriliyor...</span>
+      </div>
+    </section>
+
+    <!-- â•â•â•â• PROCESS TAB â•â•â•â• -->
+    <section class="tab" id="tab-process">
+      <div class="proc-toolbar">
+        <button class="btn-primary" id="btnProcRefresh">â†» Yenile</button>
+        <input type="text" id="procSearch" placeholder="SÃ¼reÃ§ ara..." />
+        <span id="procCount"></span>
+      </div>
+      <div class="proc-table-wrap">
+        <table class="proc-table" id="procTable">
+          <thead>
+            <tr>
+              <th data-sort="pid">PID</th>
+              <th data-sort="name">Ä°sim</th>
+              <th data-sort="mem">Bellek</th>
+              <th data-sort="threads">Thread</th>
+              <th data-sort="priority">Ã–ncelik</th>
+              <th>Ä°ÅŸlem</th>
+            </tr>
+          </thead>
+          <tbody id="procBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
